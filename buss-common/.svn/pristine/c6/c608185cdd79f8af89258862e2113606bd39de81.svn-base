@@ -1,0 +1,199 @@
+package com.want.common.service.impl;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.want.common.mapper.AreaMapper;
+import com.want.common.mapper.BranchMapper;
+import com.want.common.mapper.ChannelMapper;
+import com.want.common.mapper.CompanyMapper;
+import com.want.common.mapper.CustomerMapper;
+import com.want.common.mapper.DistrictCompanyMapper;
+import com.want.common.mapper.EmpDistrictMapper;
+import com.want.common.mapper.MarketMapper;
+import com.want.common.po.Area;
+import com.want.common.po.Branch;
+import com.want.common.po.Channel;
+import com.want.common.po.Company;
+import com.want.common.po.CustomerInfo;
+import com.want.common.po.DistrictCompany;
+import com.want.common.po.EmpDistrict;
+import com.want.common.po.ForthCity;
+import com.want.common.po.SmallMarket;
+import com.want.common.po.StandardMarket;
+import com.want.common.po.ThirdCity;
+import com.want.common.service.IGetOrgInfoService;
+
+/**
+ * 
+ * <p>Title: 实现类</p>
+ * <p>Description:群组业务层实现类</p>
+ * <p>Company:旺旺集团</p>
+ * @author 00114260
+ * @date 2017年10月12日 下午3:52:36
+ */
+@Service
+public class GetOrgInfoServiceImpl implements IGetOrgInfoService{
+	
+	@Autowired
+	private BranchMapper branchMapper;
+	@Autowired
+	private CompanyMapper companyMapper;
+	@Autowired
+	private ChannelMapper channelMapper;
+	@Autowired
+	private CustomerMapper customerMapper;
+	@Autowired
+	private AreaMapper areaMapper;
+	@Autowired
+	private MarketMapper marketMapper;
+	@Autowired
+	private EmpDistrictMapper empDistrictMapper;
+	@Autowired
+	private DistrictCompanyMapper districtCompanyMapper;
+	@Override
+	public List<Company> queryCompanyByEmp(String empId) {
+		System.out.println("queryCompanyByEmp");
+		List<Company> listCompany = new ArrayList<Company>();
+		listCompany = this.companyMapper.selectCompanyWithEmpPosOrgView(empId);
+		
+		// 总部限分公司人员
+		if (listCompany.size() == 0) {
+			listCompany = this.companyMapper.selectCompanyWithEmpCompany(empId);
+		}
+		
+		// 取全国分公司
+		if (listCompany.size() == 0) {
+			listCompany = this.companyMapper.selectCompany();
+		}
+		return listCompany;
+	}
+	
+
+	@Override
+	public Company queryCompanyById(String companyId) {
+		return this.companyMapper.selectCompanyById(companyId);
+	}
+
+	@Override
+	public List<Branch> queryBranchByEmp(String empId, String companyId, String areaId) {
+		// TODO Auto-generated method stub
+		List<Branch> listBranch = new ArrayList<Branch>();
+		listBranch = this.branchMapper.selectBranchWithEmpPosOrgView(empId, companyId, areaId);
+		
+		// 总部限营业所人员
+		if (listBranch.size() == 0) {
+			listBranch = this.branchMapper.selectBranchWithEmpCompany(empId, companyId);
+		}
+				
+		// 取全国分公司
+		if (listBranch.size() == 0) {
+			//areaId 为空，取分公司下营业所
+			//areaId不为空，取分公司及片区下对应营业所
+			listBranch = this.branchMapper.selectBranch(companyId, areaId);
+		}
+		return listBranch;
+		
+	}
+
+	@Override
+	public List<Branch> queryBranchByCompany(String companyId) {
+		List<Branch> listBranch = new ArrayList<Branch>();
+		listBranch = this.branchMapper.selectBranchWithEmpPosOrgView("", companyId, "");
+		
+		// 取全国分公司
+		if(listBranch.size() == 0) {
+			listBranch = this.branchMapper.selectBranch(companyId,"");
+		}
+		return listBranch;
+	}
+
+	@Override
+	public Branch queryBranchById(String branchId) {
+		return this.branchMapper.selectBranchWithId(branchId);
+		
+	}
+
+
+	@Override
+	public List<Channel> queryChannelByEmp(String empId) {
+		List<Channel> listChannel = new ArrayList<Channel>();
+		listChannel = this.channelMapper.selectChannelWithEmpChannel(empId);
+		
+		// 取全国分公司
+		if (listChannel.size() == 0) {
+			listChannel = this.channelMapper.selectChannel();
+		}
+		
+		return listChannel;
+	}
+
+
+	@Override
+	public CustomerInfo getCustomerInfoById(String customerId) {
+		return customerMapper.selectCustomerWithId(customerId).get(0);
+	}
+
+
+	@Override
+	public List<Area> queryAreaByEmpAndCompanyId(String empId, String companyId) {
+			List<Area> listArea = new ArrayList<Area>();
+			listArea = areaMapper.queryAreaByEmpAndCompanyId(empId, companyId);
+			
+			//
+			if (listArea.size() == 0) {
+				listArea = areaMapper.queryAreaByCompanyId(companyId);
+			}
+		    return listArea;
+	}
+
+
+	@Override
+	public List<StandardMarket> queryMarketByBranch(String branchId) {
+		List<StandardMarket> listStandardMarket = new ArrayList<StandardMarket>();
+		listStandardMarket = marketMapper.queryMarketByBranch(branchId);
+		
+	    return listStandardMarket;
+	}
+
+
+	@Override
+	public List<SmallMarket> querySmallMarketBysmId(String standardMarketId) {
+		List<SmallMarket> listSmallMarket = new ArrayList<SmallMarket>();
+		listSmallMarket = marketMapper.querySmallMarketBysmId(standardMarketId);
+		
+	    return listSmallMarket;
+	}
+
+
+	@Override
+	public List<ThirdCity> queryThirdByMarket(String marketId) {
+		List<ThirdCity> listThirdCity = new ArrayList<ThirdCity>();
+		listThirdCity = marketMapper.queryThirdByMarket(marketId);
+		return listThirdCity;
+	}
+
+
+	@Override
+	public List<ForthCity> queryForthByThird(String thirdId) {
+		List<ForthCity> listForthCity = new ArrayList<ForthCity>();
+		listForthCity = marketMapper.queryForthByThird(thirdId);
+		return listForthCity;
+	}
+
+	@Override
+	public List<EmpDistrict> queryDistrictById(String empId) {
+		return empDistrictMapper.queryDistrictById(empId);
+	}
+
+	@Override
+	public List<DistrictCompany> queryCompanyByDistrictId(String districtId) {
+		return districtCompanyMapper.queryCompanyByDistrictId(districtId);
+	}
+
+}

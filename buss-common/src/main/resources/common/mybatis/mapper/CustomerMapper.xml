@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.want.common.mapper.CustomerMapper">
+
+<!-- 根据客户编码获取客户信息-->
+<select id="selectCustomerWithId" resultType="com.want.common.po.CustomerInfo" parameterType="String">
+	SELECT distinct b.CHANNEL_ID,c.CHANNEL_NAME,b.COMPANY_ID,e.NAME COMPANY_NAME,a.BRANCH_ID,d.NAME BRANCH_NAME,a.ID CUSTOMER_ID,a.NAME CUSTOMER_NAME 
+	FROM SALES.CUSTOMER a 
+	INNER JOIN SALES.CUSTOMER_PROPERTY_VIEW b ON a.ID=b.CUSTOMER_ID 
+	LEFT JOIN SALES.CHANNEL c ON b.CHANNEL_ID=c.CHANNEL_ID 
+	LEFT JOIN SALES.BRANCH d ON a.BRANCH_ID=d.ID 
+	LEFT JOIN SALES.COMPANY e ON d.COMPANY_ID=e.ID 
+	WHERE a.STATUS IS NULL AND 1=1 and a.ID = #{customerId}
+</select>
+
+</mapper>

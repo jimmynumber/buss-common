@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.want.common.mapper.CompanyMapper">
+
+<!-- 获取EMP_POSITION_ORG_VIEW对应分公司列表-->
+<select id="selectCompanyWithEmpPosOrgView" resultType="com.want.common.po.Company" parameterType="String">
+	SELECT DISTINCT COMPANY.ID, COMPANY.NAME, COMPANY.REGION_ID, COMPANY.HR_COMPANY_ID, COMPANY.UPDATE_DATE FROM SALES.EMP_POSITION_ORG_VIEW 
+	INNER JOIN SALES.COMPANY ON EMP_POSITION_ORG_VIEW.COMPANY_ID = COMPANY.ID 
+	WHERE EMP_POSITION_ORG_VIEW.EMP_ID = #{empId}
+	ORDER BY COMPANY.ID
+</select>
+
+<!-- 获取EMP_COMPANY对应分公司列表-->
+<select id="selectCompanyWithEmpCompany" resultType="com.want.common.po.Company" parameterType="String">
+	SELECT DISTINCT COMPANY.ID, COMPANY.NAME, COMPANY.REGION_ID, COMPANY.HR_COMPANY_ID, COMPANY.UPDATE_DATE 
+	FROM SALES.EMP_COMPANY 
+	INNER JOIN SALES.COMPANY ON EMP_COMPANY.COMPANY_ID = COMPANY.ID 
+	WHERE EMP_COMPANY.EMP_ID = #{empId}
+	ORDER BY COMPANY.ID 
+</select>
+
+<!-- 获取全国分公司列表-->
+<select id="selectCompany" resultType="com.want.common.po.Company">
+	SELECT ID,NAME,REGION_ID,HR_COMPANY_ID,UPDATE_DATE 
+	FROM SALES.COMPANY 
+	ORDER BY ID
+</select>
+
+<!-- 根据公司编码获取分公司-->
+<select id="selectCompanyById" resultType="com.want.common.po.Company" parameterType="String">
+	SELECT ID,NAME,REGION_ID,HR_COMPANY_ID,UPDATE_DATE 
+	FROM SALES.COMPANY 
+	where ID = #{companyId}
+</select>
+
+</mapper>

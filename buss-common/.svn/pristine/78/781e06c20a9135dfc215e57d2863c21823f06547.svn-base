@@ -1,0 +1,32 @@
+redis.maxWaitMillis 30000
+redis.maxTotal 100
+redis.maxIdle 50
+redis.minIdle 8
+
+redis.maxRedirects 5
+redis.location prd.want-want.com
+redis.menu menu
+redis.portlet portlet
+redis.cusportlet cusportlet
+redis.defportlet defportlet
+redis.rolesof rolesof
+redis.permissionsof permissionsof
+
+redis.node1.ip 10.0.110.141
+redis.node1.port 7000
+
+redis.node2.ip 10.0.110.141
+redis.node2.port 7005
+
+redis.node3.ip 10.0.110.142
+redis.node3.port 7001
+
+redis.node4.ip 10.0.110.142
+redis.node4.port 7004
+
+redis.node5.ip 10.0.110.143
+redis.node5.port 7002
+
+redis.node6.ip 10.0.110.143
+redis.node6.port 7003
+

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	   					   http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="hessianProxyFactory" class="com.want.common.hessian.HessianProxyFactory"/>
+
+	<bean id="permissionRemoteService"
+		class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+		<property name="overloadEnabled" value="true" />
+		<property name="proxyFactory" ref="hessianProxyFactory" />
+		<property name="serviceUrl" value="${client.remote.service.url}" />
+		<property name="serviceInterface"
+			value="com.want.mgmt.remote.service.IPermissionRemoteService" />
+	</bean>
+	
+	<!-- 客户端 消息的hessian服务-->  
+</beans>

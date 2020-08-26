@@ -1,0 +1,18 @@
+vt.cookie.name vt
+vt.redis.maxtime 1800
+
+client.key=want-portal
+
+client.remote.service.url=http://iw2uat.want-want.com/want-mgmt/remote/permission.html
+
+client.login.url=http://iw2uat.want-want.com/want-sso/login.html
+
+client.unauthorized.url=http://iw2uat.want-want.com/want-sso/page/unauthorized.html
+
+client.exception.url=http://iw2uat.want-want.com/want-sso/page/exception.html
+
+client.filter.chain.definitions=/css/**=anon;/js/**=anon;/image/**=anon;/**=authc
+
+client.hessian.clientNotifyService.url=http://127.0.0.1:8080/want-notify/notify/notifyinfo.html
+
+client.mobile.login.url=http://localhost:8080/want-mobile-login/iwm/mobileLogin/want2ValidateByToken

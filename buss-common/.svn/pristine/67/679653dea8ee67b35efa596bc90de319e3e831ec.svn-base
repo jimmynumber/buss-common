@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<!-- import properties -->
+	<!-- 正式路径 -->
+	<context:property-placeholder location="classpath:properties/*.properties,file:/opt/rediscluster/redis-info.properties" />
+	<!-- 本机测试，提交代码前需要改回正式路径 -->
+	<!-- <context:property-placeholder location="classpath:properties/*.properties,file:C:/redis-info.properties" /> -->
+	
+	<!-- 扫描包 -->
+	<context:component-scan base-package="com.want" />
+	<bean class="com.want.common.po.Company"/>
+	<bean class="com.want.common.po.Branch"/>
+	<bean class="com.want.common.po.Channel"/>
+	<bean class="com.want.common.po.EmpDistrict"/>
+	<bean class="com.want.common.po.DistrictCompany"/>
+
+	<!-- ssoBaseConfig配置 -->
+	<bean id="ssoBaseConfig" class="com.want.common.pojo.SsoBaseConfig">
+		<property name="vtCookieName" value="${vt.cookie.name}" />
+		<property name="vtRedisMaxTime" value="${vt.redis.maxtime}" />
+		<property name="loginUrl" value="${client.login.url}" />
+		<property name="mobileLoginUrl" value="${client.mobile.login.url}" />
+	</bean>
+</beans>

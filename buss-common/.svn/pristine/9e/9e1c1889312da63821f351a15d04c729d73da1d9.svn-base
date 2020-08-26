@@ -1,0 +1,6 @@
+ad.ldap.url ldap://10.0.26.145:7389
+ad.ldap.admin.dn CN=ron,CN=Partition1,DC=want-moss,DC=com
+ad.ldap.admin.password 123456
+ad.ldap.user.dn CN=Users,CN=Partition1,DC=want-moss,DC=com
+ad.ldap.pos.dn CN=Positions,CN=Groups,CN=Partition1,DC=want-moss,DC=com
+ad.ldap.org.dn CN=Organizations,CN=Groups,CN=Partition1,DC=want-moss,DC=com

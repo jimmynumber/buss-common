@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.want.common.mapper.PositionMapper">
+
+<!-- 取得登入者的組織資訊 -->
+<select id="getLoginInfo" resultType="com.want.common.po.Emp" parameterType="java.lang.String" >
+	select HR_EMP.EMP_ID, HR_EMP.EMP_NAME from SALES.HR_EMP
+	where HR_EMP.EMP_ID = #{empId}
+</select>
+  
+<!-- 根据客户编码获取客户信息-->
+<select id="queryPosType" resultType="com.want.common.po.PosType" parameterType="String">
+	SELECT DISTINCT POS_TYPE_ID,POS_TYPE_NAME 
+	FROM SALES.HR_POS_TYPE 
+	WHERE STATUS = '1'
+	ORDER BY POS_TYPE_ID
+</select>
+
+<!-- 根据判断用户是否是总部人员-->
+<select id="isHQ" resultType="com.want.common.po.Emp" parameterType="String">
+	SELECT DISTINCT a.EMP_ID,a.EMP_NAME 
+	FROM SALES.HR_EMP a
+	INNER JOIN HR_EMP_POSITION b ON a.EMP_ID = b.EMP_ID
+	INNER JOIN HR_POSITION c on b.POS_ID=c.POS_ID
+	WHERE a.EMP_ID=#{empId} and c.ORG_ID like '1%'
+</select>
+</mapper>

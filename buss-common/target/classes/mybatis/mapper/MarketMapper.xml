@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.want.common.mapper.MarketMapper">
+
+<!-- 根据营业所编码获取标准市场信息-->
+<select id="queryMarketByBranch" resultType="com.want.common.po.StandardMarket" parameterType="String">
+	SELECT a.ID,a.NAME,a.BRANCH_ID,a.UPDATE_DATE 
+	FROM SALES.STANDARD_MARKET a 
+	WHERE a.BRANCH_ID=#{branchId}
+	ORDER BY a.ID
+</select>
+
+<!-- 根据标准市场获取小标市场信息-->
+<select id="querySmallMarketBysmId" resultType="com.want.common.po.SmallMarket" parameterType="String">
+	SELECT a.SMALL_MARKET_ID,a.SMALL_MARKET_NAME,a.MARKET_ID,a.MARKET_NAME,a.UPDATE_DATE 
+	FROM SALES.SMALL_MARKET a 
+	WHERE a.MARKET_ID=#{standardMarketId}
+	ORDER BY a.SMALL_MARKET_ID
+</select>
+
+<select id="queryThirdByMarket" resultType="com.want.common.po.ThirdCity" parameterType="String">
+	SELECT a.ID,a.NAME,a.MARKET_ID,a.BRANCH_ID,a.UPDATE_DATE FROM THIRD_CITY a 
+	WHERE a.MARKET_ID=#{marketId} 
+	ORDER BY a.ID
+</select>
+
+<select id="queryForthByThird" resultType="com.want.common.po.ForthCity" parameterType="String">
+	SELECT a.SID,a.NAME,a.THIRD_ID,a.STATUS,a.CREATE_USER,a.CREATE_DATE,a.UPDATE_USER,a.UPDATE_DATE FROM FORTH_CITY a 
+	WHERE a.STATUS = 1 AND a.THIRD_ID=#{thirdId}
+	ORDER BY a.SID
+</select>
+
+</mapper>

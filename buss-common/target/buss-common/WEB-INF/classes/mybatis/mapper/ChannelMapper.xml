@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.want.common.mapper.ChannelMapper">
+
+<!-- 获取EMP_CHANNEL对应渠道列表-->
+<select id="selectChannelWithEmpChannel" resultType="com.want.common.po.Channel" parameterType="String">
+	SELECT CHANNEL.CHANNEL_ID, CHANNEL.CHANNEL_NAME, CHANNEL.STATUS, CHANNEL.HR_POS_PROPERTY_ID, CHANNEL.ERP_CHANNEL_ID, CHANNEL.ERP_CHANNEL_DESC, CHANNEL.ERP_PROD_GROUP_ID, CHANNEL.ERP_PROD_GROUP_DESC 
+	FROM SALES.EMP_CHANNEL 
+	INNER JOIN SALES.CHANNEL ON EMP_CHANNEL.CHANNEL_ID = CHANNEL.CHANNEL_ID 
+	WHERE STATUS='1' AND EMP_CHANNEL.EMP_ID = #{empId}
+	ORDER BY CHANNEL_NAME
+</select>
+
+<!-- 获取全国营业所列表-->
+<select id="selectChannel" resultType="com.want.common.po.Channel">
+	SELECT CHANNEL_ID,CHANNEL_NAME,STATUS,HR_POS_PROPERTY_ID,ERP_CHANNEL_ID,ERP_CHANNEL_DESC,ERP_PROD_GROUP_ID,ERP_PROD_GROUP_DESC 
+	FROM SALES.CHANNEL WHERE STATUS='1' 
+	ORDER BY CHANNEL_NAME
+</select>
+
+</mapper>

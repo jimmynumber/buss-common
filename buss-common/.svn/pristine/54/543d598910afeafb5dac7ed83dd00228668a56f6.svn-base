@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.want.common.mapper.DistrictCompanyMapper">
+
+<!-- 根据业代Id获取大区信息 -->
+	<select id="queryCompanyByDistrictId" resultType="com.want.common.po.DistrictCompany" parameterType="String">
+		SELECT DISTRICT_ID,DISTRICT_NAME,COMPANY_ID,COMPANY_NAME,STATUS,CREATE_USER,CREATE_DATE 
+		FROM  SALES.DISTRICT_COMPANY
+	     <where>
+		     <if test="districtId !=null and districtId !=''">
+			    DISTRICT_ID = #{districtId}
+			 </if>
+	     </where>
+	</select>
+</mapper>

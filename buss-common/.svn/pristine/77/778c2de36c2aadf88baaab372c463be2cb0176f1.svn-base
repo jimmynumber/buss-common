@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.want.common.mapper.AreaMapper">
+
+<!-- 根据人员信息和公司编码获得片区-->
+<select id="queryAreaByEmpAndCompanyId" resultType="com.want.common.po.Area" parameterType="String">
+	 SELECT AREA.ID, AREA.NAME, AREA.COMPANY_ID, AREA.STATUS 
+	 FROM SALES.EMP_POSITION_ORG_VIEW 
+	 INNER JOIN SALES.AREA ON EMP_POSITION_ORG_VIEW.COMPANY_ID = AREA.COMPANY_ID 
+	 WHERE EMP_POSITION_ORG_VIEW.EMP_ID = #{empId}
+	 <if test="companyId !=null and companyId !=''">
+	    AND EMP_POSITION_ORG_VIEW.COMPANY_ID = #{companyId}
+	 </if>
+	 ORDER BY AREA.ID 
+</select>
+
+<!-- 获得分公司下所有片区信息-->
+<select id="queryAreaByCompanyId" resultType="com.want.common.po.Area" parameterType="String">
+	 SELECT AREA.ID, AREA.NAME, AREA.COMPANY_ID, AREA.STATUS 
+	 FROM SALES.AREA 
+	 WHERE AREA.COMPANY_ID = #{companyId}
+	 ORDER BY AREA.ID 
+</select>
+
+</mapper>

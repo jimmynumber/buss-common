@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.want.common.mapper.ProductMapper">
+
+<resultMap id="BaseResultMap" type="com.want.common.po.Product">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="SPEC_TASTE" jdbcType="VARCHAR" property="specTaste" />
+    <result column="MATERIAL_TYPE" jdbcType="VARCHAR" property="materialType" />
+    <result column="BASE_UNIT" jdbcType="VARCHAR" property="baseUnit" />
+    <result column="LV_5_ID" jdbcType="VARCHAR" property="lv5Id" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
+</resultMap>
+
+<!-- 根据客户编码获取客户信息-->
+<select id="getProdGroupByType" resultType="com.want.common.po.ProductLevel" parameterType="String">
+	select ID,NAME,PROD_LEVEL,UPDATE_DATE 
+	from SALES.PRODUCT_LEVEL 
+	where 1=1
+	<if test="prodLevel !=null and prodLevel !=''">
+		and PROD_LEVEL=#{prodLevel}
+	 </if>
+	<if test="prodId !=null and prodId !=''">
+	    and ID like concat(#{prodId},'%')
+	 </if>
+	ORDER BY ID
+</select>
+
+<select id="queryProductCount" parameterType="com.want.common.pojo.Pagination" resultType="java.lang.Long">
+	SELECT count(*)
+	FROM SALES.PRODUCT 
+	LEFT JOIN SALES.PRODUCT_LEVEL ON PRODUCT_LEVEL.ID = PRODUCT.LV_5_ID WHERE 1 = 1 
+	<if test="parameter.levelId != null and parameter.levelId != ''" >
+		AND PRODUCT_LEVEL.ID like concat(#{parameter.levelId},'%')
+	</if>
+	<if test="parameter.prodId != null and parameter.prodId != ''"> 
+	    AND PRODUCT.ID IN #{parameter.prodId}
+	</if>
+	<if test="parameter.prodName != null and parameter.prodName != ''" >
+	    AND PRODUCT.NAME LIKE concat(#{parameter.prodName},'%')
+	</if>
+</select>
+
+<select id="queryProductList" parameterType="com.want.common.pojo.Pagination" resultMap="BaseResultMap">
+	SELECT * FROM( 
+    	SELECT temp.*, rownum row_id FROM (
+			SELECT PRODUCT.ID, PRODUCT.NAME, PRODUCT.SPEC_TASTE, PRODUCT.MATERIAL_TYPE, PRODUCT.BASE_UNIT, PRODUCT.LV_5_ID, PRODUCT.UPDATE_DATE 
+			FROM SALES.PRODUCT 
+			LEFT JOIN SALES.PRODUCT_LEVEL ON PRODUCT_LEVEL.ID = PRODUCT.LV_5_ID WHERE 1 = 1 
+			<if test="parameter.levelId != null and parameter.levelId != ''" >
+				AND PRODUCT_LEVEL.ID like concat(#{parameter.levelId},'%')
+			</if>
+			<if test="parameter.prodId != null and parameter.prodId != ''"> 
+			    AND PRODUCT.ID IN #{parameter.prodId}
+			</if>
+			<if test="parameter.prodName != null and parameter.prodName != ''" >
+			    AND PRODUCT.NAME LIKE concat(#{parameter.prodName},'%')
+			</if>
+		) temp WHERE rownum <![CDATA[<]]> #{endRow,jdbcType=DECIMAL}
+    ) WHERE row_id >= #{beginRow,jdbcType=DECIMAL}
+</select>
+
+</mapper>

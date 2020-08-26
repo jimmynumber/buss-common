@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<!-- 连接池的配置 -->
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<!-- 最大等待时间 -->
+		<property name="maxWaitMillis" value="${redis.maxWaitMillis}" />
+		<!-- 最大连接数 -->
+		<property name="maxTotal" value="${redis.maxTotal}" />
+		<!-- 最大空闲连接 -->
+		<property name="maxIdle" value="${redis.maxIdle}" />
+		<!-- 最小空闲连接 -->
+		<property name="minIdle" value="${redis.minIdle}" />
+	</bean>
+
+	<!-- redis集群 -->
+	<bean id="redisClusterConfiguration"
+		class="org.springframework.data.redis.connection.RedisClusterConfiguration">
+		<property name="clusterNodes">
+			<set>
+				<bean class="org.springframework.data.redis.connection.RedisNode">
+					<constructor-arg index="0" value="${redis.node1.ip}" />
+					<constructor-arg index="1" value="${redis.node1.port}" />
+				</bean>
+				<bean class="org.springframework.data.redis.connection.RedisNode">
+					<constructor-arg index="0" value="${redis.node2.ip}" />
+					<constructor-arg index="1" value="${redis.node2.port}" />
+				</bean>
+				<bean class="org.springframework.data.redis.connection.RedisNode">
+					<constructor-arg index="0" value="${redis.node3.ip}" />
+					<constructor-arg index="1" value="${redis.node3.port}" />
+				</bean>
+				<bean class="org.springframework.data.redis.connection.RedisNode">
+					<constructor-arg index="0" value="${redis.node4.ip}" />
+					<constructor-arg index="1" value="${redis.node4.port}" />
+				</bean>
+				<bean class="org.springframework.data.redis.connection.RedisNode">
+					<constructor-arg index="0" value="${redis.node5.ip}" />
+					<constructor-arg index="1" value="${redis.node5.port}" />
+				</bean>
+				<bean class="org.springframework.data.redis.connection.RedisNode">
+					<constructor-arg index="0" value="${redis.node6.ip}" />
+					<constructor-arg index="1" value="${redis.node6.port}" />
+				</bean>
+			</set>
+		</property>
+		<property name="maxRedirects" value="${redis.maxRedirects}" />
+	</bean>
+
+	<!-- spring jedis 连接池工厂 -->
+	<bean id="connectionFactory"
+		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<constructor-arg index="0" ref="redisClusterConfiguration" />
+		<constructor-arg index="1" ref="jedisPoolConfig" />
+		<property name="password" value="${redis.password}" />
+	</bean>
+	
+	<bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+        <property name="connectionFactory" ref="connectionFactory" />
+    </bean>
+    
+	<bean id="redisService" class="com.want.common.service.RedisService">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="redisTemplate" ref="stringRedisTemplate" />
+	</bean>
+	
+</beans>

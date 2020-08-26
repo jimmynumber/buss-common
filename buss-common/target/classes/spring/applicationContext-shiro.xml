@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       
+    <!-- Realm实现 -->
+    <bean id="myRealm" class="com.want.sso.client.realm.SsoClientRealm">
+        <property name="cachingEnabled" value="false"/>
+        <property name="clientKey" value="${client.key}"/>
+    </bean>
+
+    <!-- 安全管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="myRealm"/>
+    </bean>
+
+    <bean id="clientAuthenticationFilter" class="com.want.sso.client.filter.ClientAuthenticationFilter"/>
+
+    <!-- Shiro的Web过滤器 -->
+    <bean id="shiroFilter" class="com.want.sso.client.realm.ClientShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="${client.login.url}"/>
+        <property name="unauthorizedUrl" value="${client.unauthorized.url}"/>
+        <property name="filters">
+            <util:map>
+                <entry key="authc" value-ref="clientAuthenticationFilter"/>
+            </util:map>
+        </property>
+        <property name="filterChainDefinitions" value="${client.filter.chain.definitions}"/>
+    </bean>
+
+    <!-- Shiro生命周期处理器-->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+</beans>

@@ -1,0 +1,3 @@
+ad.ldap.url ldap://10.0.67.153:389
+ad.ldap.admin.dn CN=admin,CN=Users,CN=PartitionWWLDS1,DC=want-want,DC=com
+ad.ldap.admin.password iWantWant0316

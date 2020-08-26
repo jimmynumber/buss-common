@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.want.common.mapper.BranchMapper">
+
+<!-- 获取EMP_POSITION_ORG_VIEW对应营业所列表-->
+<select id="selectBranchWithEmpPosOrgView" resultType="com.want.common.po.Branch" parameterType="String">
+	 SELECT DISTINCT BRANCH.ID, BRANCH.NAME, BRANCH.AREA_ID, BRANCH.COMPANY_ID, BRANCH.HR_BRANCH_ID, BRANCH.UPDATE_DATE 
+	 FROM SALES.EMP_POSITION_ORG_VIEW 
+	 INNER JOIN SALES.BRANCH ON EMP_POSITION_ORG_VIEW.BRANCH_ID = BRANCH.ID 
+	 WHERE 1=1
+	 <if test="empId !=null and empId !=''">
+	    AND EMP_POSITION_ORG_VIEW.EMP_ID = #{empId}
+	 </if>
+	 <if test="companyId !=null and companyId !=''">
+	    AND EMP_POSITION_ORG_VIEW.COMPANY_ID = #{companyId}
+    </if>	
+     <if test="areaId !=null and areaId !=''">
+	    AND EMP_POSITION_ORG_VIEW.AREA_ID = #{areaId}
+    </if>
+	 ORDER BY BRANCH.ID
+</select>
+
+<!-- 获取EMP_COMPANY对应营业所列表-->
+<select id="selectBranchWithEmpCompany" resultType="com.want.common.po.Branch" parameterType="String">
+	SELECT DISTINCT BRANCH.ID, BRANCH.NAME, BRANCH.AREA_ID, BRANCH.COMPANY_ID, BRANCH.HR_BRANCH_ID, BRANCH.UPDATE_DATE 
+	FROM SALES.EMP_COMPANY 
+	INNER JOIN SALES.BRANCH ON EMP_COMPANY.BRANCH_ID = BRANCH.ID 
+	WHERE EMP_COMPANY.EMP_ID = #{empId} 
+	 <if test="companyId !=null and companyId !=''">
+	    AND EMP_COMPANY.COMPANY_ID = #{companyId}
+    </if>
+	ORDER BY BRANCH.ID 
+</select>
+
+<!-- 获取全国营业所列表-->
+<select id="selectBranch" resultType="com.want.common.po.Branch" parameterType="String">
+	SELECT a.ID,a.NAME,a.AREA_ID,a.COMPANY_ID,a.HR_BRANCH_ID,a.UPDATE_DATE 
+	FROM SALES.BRANCH a 
+	WHERE a.COMPANY_ID = #{companyId} 
+	 <if test="areaId !=null and areaId !=''">
+	    AND a.TRADITION_AREA_ID = #{areaId}
+    </if>
+	ORDER BY a.ID
+</select>
+
+<!-- 根据营业所编码获取营业所信息-->
+<select id="selectBranchWithId" resultType="com.want.common.po.Branch" parameterType="String">
+	SELECT a.ID,a.NAME,a.AREA_ID,a.COMPANY_ID,a.HR_BRANCH_ID,a.UPDATE_DATE 
+	FROM SALES.BRANCH a 
+	WHERE a.ID = #{id} 
+</select>
+
+</mapper>

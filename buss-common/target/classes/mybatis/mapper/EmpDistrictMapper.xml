@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.want.common.mapper.EmpDistrictMapper">
+
+<!-- 根据业代Id获取大区信息 -->
+	<select id="queryDistrictById" resultType="com.want.common.po.EmpDistrict" parameterType="String">
+		 SELECT EMP_ID,EMP_NAME,DISTRICT_ID,DISTRICT_NAME,STATUS,CREATE_USER,CREATE_DATE 
+		 FROM SALES.EMP_DISTRICT
+	     <where>
+		     <if test="empId !=null and empId !=''">
+			    EMP_ID = #{empId}
+			 </if>
+	     </where>
+	</select>
+</mapper>
